@@ -1,15 +1,31 @@
 import React from 'react';
-import Enzyme from 'enzyme';
+import {Provider} from 'react-redux';
+import createStore from '../lib/store';
 import Adapter from 'enzyme-adapter-react-16';
+import { configure, shallow, mount } from 'enzyme';
+import Dashboard from '../components/dashboard/dashboard';
+
 require('jest');
 
-Enzyme.configure({adapter: new Adapter()});
-import Dashboard from '../components/dashboard/index';
+configure({ adapter: new Adapter() });
 
-describe('Dashboard', () => {
-  test('Testing initial state', () => {
-    let mountedDashboard = Enzyme.mount(<Dashboard />);
+describe('<Dashboard />', function () {
+  beforeAll(() => {
+    let wrapper = mount(<Provider store={createStore()}><Dashboard/></Provider>);
+    wrapper.setProps({ categories: [
+      { _id: '1234', title: 'wat', timestamp: new Date() },
+      { _id: '4567', title: 'who', timestamp: new Date() }]});
 
-    expect(mountedDashboard.state('notes')).toEqual([]);
+    this.wrapper = wrapper;
+  });
+  afterAll(() => this.wrapper.unmount());
+
+  it('should have an intial state of []', () => {
+    expect(wrapper.state).toEqual([]);
+  });
+
+  it('should render two category items in the DOM', () => {
+    // console.log(this.wrapper.html())
+    expect(this.wrapper.find('.dashboard').length).toBe(1);
   });
 });
