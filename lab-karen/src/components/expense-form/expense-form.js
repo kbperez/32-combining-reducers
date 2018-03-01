@@ -8,8 +8,7 @@ class ExpenseForm extends React.Component {
       : {
         spend: '',
         cost: 0,
-        completed: false,
-        editing: false,
+        categoryId: this.props.categoryId,
       };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,7 +21,6 @@ class ExpenseForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
     this.props.onComplete(this.state);
     this.setState({spend: '', cost: 0});
   }
@@ -30,6 +28,7 @@ class ExpenseForm extends React.Component {
   render() {
     return (
       <form className="expense-form" onSubmit={this.handleSubmit}>
+        <h2>Expenses</h2>
         <input
           type="text"
           name="spend"

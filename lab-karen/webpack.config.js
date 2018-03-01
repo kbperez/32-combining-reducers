@@ -14,15 +14,15 @@ let plugins = [
   new ExtractTextPlugin('bundle-[hash].css'),
   new EnvironmentPlugin(['NODE_ENV']),
   new DefinePlugin({
-    __DEBUG__: JSON.stringify(!production)
+    __DEBUG__: JSON.stringify(!production),
   }),
-]
+];
 
 if(production) {
   plugins = plugins.concat([
     new CleanPlugin(),
     new UglifyPlugin(),
-  ])
+  ]);
 }
 
 module.exports = {
@@ -35,7 +35,7 @@ module.exports = {
   output: {
     path: `${__dirname}/build`,
     filename: 'bundle-[hash].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     rules: [
