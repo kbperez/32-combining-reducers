@@ -1,36 +1,26 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {categoryCreate, categoryUpdate, categoryDelete} from '../../actions/category-actions';
-import {expenseCreate, expenseUpdate, expenseDelete} from '../../actions/expense-actions';
+import {renderIf} from '../../lib/utils';
+import {categoryCreate, categoryUpdate} from '../../actions/category-actions';
 import CategoryForm from '../category-form/category-form';
 import CategoryItem from '../category-item/category-item';
 import ExpenseForm from '../expense-form/expense-form';
 
-
-
-
 class Dashboard extends React.Component {
   render() {
     return (
-      <section>
+      <section className="dashboard">
         <h1>Budget App</h1>
 
         <CategoryForm
           buttonText='Create'
-          onComplete={this.props.dashboardCategoryCreate}/>
-        <h2>Budget Categories</h2>
-        {this.props.categories ?
-          this.props.categories.map(cat =>
-            <CategoryItem key={cat._id} cat={cat} exp={this.props.expenses[cat._id]}
-              categoryDelete={this.props.CategoryItemCategoryDelete}
-              categoryUpdate={this.props.CategoryItemCategoryUpdate}
-              expenseCreate={this.props.dashboardExpenseCreate}
-              expenseUpdate={this.props.dashboardExpenseUpdate}
-              expenseDelete={this.props.dashboardExpenseDelete}/>)
-          :
-          undefined
-        }
-
+          onComplete={this.props.categoryCreate}/>
+        {renderIf(this.props.categories, this.props.categories.map(category =>
+          <CategoryItem
+            className="category-items"
+            key={category._id}
+            category={category}></CategoryItem>)
+        )}
       </section>
     );
   }
@@ -42,12 +32,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, getState) => ({
-  dashboardCategoryCreate: category => dispatch(categoryCreate(category)),
-  CategoryItemCategoryUpdate: category => dispatch(categoryUpdate(category)),
-  CategoryItemCategoryDelete: category => dispatch(categoryDelete(category)),
-  dashboardExpenseCreate: expense => dispatch(expenseCreate(expense)),
-  dashboardExpenseUpdate: expense => dispatch(expenseUpdate(expense)),
-  dashboardExpenseDelete: expense => dispatch(expenseDelete(expense)),
+  categoryCreate: category => dispatch(categoryCreate(category)),
+  categoryUpdate: category => dispatch(categoryUpdate(category)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
